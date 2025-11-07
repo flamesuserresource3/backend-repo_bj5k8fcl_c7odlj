@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, Literal
 
 # Example schemas (replace with your own):
 
@@ -37,6 +37,20 @@ class Product(BaseModel):
     price: float = Field(..., ge=0, description="Price in dollars")
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
+
+# Cryptvest-specific schemas
+
+class Lead(BaseModel):
+    """Early access and newsletter leads"""
+    email: EmailStr = Field(..., description="Subscriber email")
+    source: Optional[str] = Field(None, description="Where the lead originated, e.g. hero, footer, modal")
+
+class ConnectionRequest(BaseModel):
+    """Track requested connections (wallets/exchanges) for demo + onboarding"""
+    type: Literal["wallet", "exchange"] = Field(..., description="Connection type")
+    provider: str = Field(..., description="Provider name, e.g. MetaMask, Coinbase, Binance")
+    address: Optional[str] = Field(None, description="Wallet address if provided")
+    note: Optional[str] = Field(None, description="Optional note or metadata")
 
 # Add your own schemas here:
 # --------------------------------------------------
